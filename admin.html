@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planet Burguer — Painel Administrativo</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="images/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+<!-- ============ LOGIN ============ -->
+<div class="login-wrap" id="loginScreen">
+  <div class="login-card">
+    <img src="images/logo.svg" alt="Planet Burguer">
+    <h1>Painel Administrativo</h1>
+    <p>Digite a senha de administrador para editar o cardápio.</p>
+    <div class="admin-field">
+      <input type="password" id="adminPasswordInput" placeholder="Senha" class="text-input">
+    </div>
+    <button class="btn-primary" id="loginBtn" style="width:100%; justify-content:center; margin-top:10px;">Entrar</button>
+    <p class="login-error" id="loginError"></p>
+  </div>
+</div>
+
+<!-- ============ PAINEL ============ -->
+<div id="adminScreen" class="hidden">
+  <header class="admin-topbar">
+    <div class="admin-topbar-inner">
+      <img src="images/logo.svg" alt="Planet Burguer">
+      <div class="admin-title">Planet Burguer<span>PAINEL ADMINISTRATIVO</span></div>
+      <div class="admin-actions">
+        <a href="index.html" class="btn-secondary" style="padding:9px 14px; font-size:12.5px;" target="_blank">Ver cardápio ↗</a>
+        <button class="btn-secondary" id="logoutBtn" style="padding:9px 14px; font-size:12.5px;">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="admin-container">
+    <div class="admin-note">
+      💡 <b>Como funciona:</b> este site não usa banco de dados, então as
+      alterações feitas aqui ficam guardadas neste navegador até você
+      clicar em <b>"Baixar config.js atualizado"</b>. Depois disso, troque
+      o arquivo <code>js/config.js</code> dentro da pasta do projeto e
+      publique novamente (arraste a pasta na Vercel/Netlify de novo) para
+      as mudanças aparecerem para os clientes.
+    </div>
+
+    <nav class="admin-tabs">
+      <button class="admin-tab active" data-tab="produtos">🍔 Produtos</button>
+      <button class="admin-tab" data-tab="categorias">🗂️ Categorias</button>
+      <button class="admin-tab" data-tab="adicionais">➕ Adicionais</button>
+      <button class="admin-tab" data-tab="pagamento">💳 Pagamento</button>
+      <button class="admin-tab" data-tab="loja">🏪 Loja & WhatsApp</button>
+    </nav>
+
+    <!-- PRODUTOS -->
+    <section class="admin-panel active" id="panel-produtos">
+      <div class="admin-panel-header">
+        <div>
+          <h2>Produtos</h2>
+          <p class="hint">Edite preços, descrições, fotos e disponibilidade.</p>
+        </div>
+      </div>
+      <div id="productsList"></div>
+      <button class="add-item-btn" id="addProductBtn">+ Adicionar novo produto</button>
+    </section>
+
+    <!-- CATEGORIAS -->
+    <section class="admin-panel" id="panel-categorias">
+      <div class="admin-panel-header">
+        <div>
+          <h2>Categorias</h2>
+          <p class="hint">Organizam os produtos no cardápio (ex: Hambúrgueres, Bebidas).</p>
+        </div>
+      </div>
+      <div id="categoriesList"></div>
+      <button class="add-item-btn" id="addCategoryBtn">+ Adicionar nova categoria</button>
+    </section>
+
+    <!-- ADICIONAIS -->
+    <section class="admin-panel" id="panel-adicionais">
+      <div class="admin-panel-header">
+        <div>
+          <h2>Adicionais</h2>
+          <p class="hint">Itens extras que o cliente pode adicionar a um produto (bacon, queijo, etc).</p>
+        </div>
+      </div>
+      <div id="addonsList"></div>
+      <button class="add-item-btn" id="addAddonBtn">+ Adicionar novo adicional</button>
+    </section>
+
+    <!-- PAGAMENTO -->
+    <section class="admin-panel" id="panel-pagamento">
+      <div class="admin-panel-header">
+        <div>
+          <h2>Formas de pagamento</h2>
+          <p class="hint">Opções mostradas no checkout.</p>
+        </div>
+      </div>
+      <div id="paymentList"></div>
+      <button class="add-item-btn" id="addPaymentBtn">+ Adicionar forma de pagamento</button>
+    </section>
+
+    <!-- LOJA / WHATSAPP -->
+    <section class="admin-panel" id="panel-loja">
+      <div class="admin-panel-header">
+        <div>
+          <h2>Dados da loja & WhatsApp</h2>
+          <p class="hint">Nome, slogan e número que recebe os pedidos.</p>
+        </div>
+      </div>
+      <div class="admin-item">
+        <div class="admin-field-grid">
+          <div class="admin-field">
+            <label>Nome da loja</label>
+            <input type="text" id="storeName">
+          </div>
+          <div class="admin-field">
+            <label>Instagram (sem @)</label>
+            <input type="text" id="storeInstagram">
+          </div>
+          <div class="admin-field span2">
+            <label>Slogan</label>
+            <input type="text" id="storeSlogan">
+          </div>
+          <div class="admin-field">
+            <label>Horário de funcionamento (texto exibido)</label>
+            <input type="text" id="storeHorario" placeholder="Ex: 19h às 01h">
+          </div>
+          <div class="admin-field">
+            <label>Abre às (hora, 0-23)</label>
+            <input type="number" min="0" max="23" id="horaAbertura">
+          </div>
+          <div class="admin-field">
+            <label>Fecha às (hora, 0-23 — pode ser depois da meia-noite)</label>
+            <input type="number" min="0" max="23" id="horaFechamento">
+          </div>
+          <div class="admin-field">
+            <label>Número do WhatsApp (só números, com DDI + DDD)</label>
+            <input type="text" id="whatsappNumber" placeholder="5521999999999">
+          </div>
+          <div class="admin-field">
+            <label>Endereço (rua e número)</label>
+            <input type="text" id="storeRua" placeholder="Rua Exemplo, 100">
+          </div>
+          <div class="admin-field">
+            <label>Bairro</label>
+            <input type="text" id="storeBairro">
+          </div>
+          <div class="admin-field">
+            <label>Cidade / Estado</label>
+            <input type="text" id="storeCidade" placeholder="Rio de Janeiro - RJ">
+          </div>
+          <div class="admin-field">
+            <label>Senha do painel administrativo</label>
+            <input type="text" id="adminPasswordField">
+          </div>
+          <div class="admin-field">
+            <label>Taxa de entrega (R$)</label>
+            <input type="number" step="0.01" min="0" id="deliveryFeeField">
+          </div>
+          <div class="admin-field">
+            <label>Pedido mínimo (R$)</label>
+            <input type="number" step="0.01" min="0" id="minimumOrderField">
+          </div>
+          <div class="admin-field span2">
+            <label>Descrição do "virar combo" (o que acompanha)</label>
+            <input type="text" id="comboAddonNomeField" placeholder="Batata frita M + refrigerante lata">
+          </div>
+          <div class="admin-field">
+            <label>Preço do "virar combo" (R$)</label>
+            <input type="number" step="0.01" min="0" id="comboAddonPrecoField">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="admin-savebar">
+      <button class="btn-secondary" id="resetChangesBtn">Descartar alterações</button>
+      <button class="btn-primary" id="exportBtn">⬇️ Baixar config.js atualizado</button>
+    </div>
+  </div>
+</div>
+
+<div class="admin-toast" id="adminToast"></div>
+
+<script src="js/config.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
