@@ -1,3 +1,11 @@
+const firebaseConfig = {
+  apiKey: "AIzaSyDQMPmu6oBX5XBnijD3wKe52LhzL8oor1o",
+  authDomain: "cardapio-digital-planetburguer.firebaseapp.com",
+  projectId: "cardapio-digital-planetburguer",
+  storageBucket: "cardapio-digital-planetburguer.firebasestorage.app",
+  messagingSenderId: "854610195538",
+  appId: "1:854610195538:web:11de30fbc8df006523db8b"
+};
 /* ============================================================
    PLANET BURGUER — ARQUIVO DE CONFIGURAÇÃO
    ============================================================
@@ -333,7 +341,7 @@ const PRODUCTS = [
     subtitulo: "Garrafa 200ml, gelada",
     descricao: "Coca-Cola gelada, garrafa 200ml.",
     ingredientes: "",
-    preco: 5.5, // <-- confirme esse valor, não foi informado o preço exato
+    preco: 3.5, // <-- confirme esse valor, não foi informado o preço exato
     imagem: "images/coca_cola_200.jpg",
     destaque: false,
     disponivel: true,
