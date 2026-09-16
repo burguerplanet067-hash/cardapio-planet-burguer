@@ -11,12 +11,12 @@ const firebaseConfig = {
    CONFIGURAÇÕES GERAIS DA LOJA E TAXA DE ENTREGA
    ========================================================================== */
 
-const WHATSAPP_LOJA = "5521998165047 "; // Coloque aqui o número do WhatsApp com DDD (apenas números)
-const INSTAGRAM_LOJA = "@planetbuguer1"; // Coloque aqui o usuário do Instagram da loja
-const HORARIO_FUNCIONAMENTO = "Quarta a Domingo, das 19h às 00h"; // Horário de funcionamento
-const PEDIDO_MINIMO = 20.00; // Pedido mínimo de R$ 20,00
-const TAXA_ENTREGA = 6.00; // Taxa de entrega de R$ 6,00
-const AVISO_RODAPE = "Imagens meramente ilustrativas."; // Rodapé do site
+const WHATSAPP_LOJA = "552199816-5047";
+const INSTAGRAM_LOJA = "@planetbuguer1";
+const HORARIO_FUNCIONAMENTO = "Terça a Domingo, das 18h às 23h30";
+const PEDIDO_MINIMO = 20.00;
+const TAXA_ENTREGA = 6.00;
+const AVISO_RODAPE = "Imagens meramente ilustrativas.";
 
 /* ==========================================================================
    LISTA DE PRODUTOS DO CARDÁPIO
