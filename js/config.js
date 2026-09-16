@@ -1,288 +1,421 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyDQMPmu6oBX5XBnijD3wKe52LhzL8oor1o",
-  authDomain: "cardapio-digital-planetburguer.firebaseapp.com",
-  projectId: "cardapio-digital-planetburguer",
-  storageBucket: "cardapio-digital-planetburguer.firebasestorage.app",
-  messagingSenderId: "854610195538",
-  appId: "1:854610195538:web:11de30fbc8df006523db8b"
+/* ============================================================
+   PLANET BURGUER — ARQUIVO DE CONFIGURAÇÃO
+   ============================================================
+   Este é o ÚNICO arquivo que você precisa editar no dia a dia.
+   Não é necessário saber programar: só troque os textos,
+   números e caminhos de imagem que estão entre aspas " ".
+
+   DICA: depois de editar, salve o arquivo e atualize a página
+   do site (ou publique novamente, se já estiver no ar).
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1) NÚMERO DO WHATSAPP DA LOJA
+   ------------------------------------------------------------
+   Coloque o número completo, com código do país (55) e DDD,
+   SEM espaços, traços ou símbolos.
+   Exemplo para (21) 99999-9999  ->  "5521999999999"
+------------------------------------------------------------- */
+const WHATSAPP_NUMBER = "5521998165047"; // <-- número real da loja
+
+/* ------------------------------------------------------------
+   1.1) SENHA DO PAINEL ADMINISTRATIVO
+   ------------------------------------------------------------
+   Essa senha protege a página admin.html contra acesso casual.
+   IMPORTANTE: como este site não tem servidor/banco de dados,
+   essa senha fica no próprio código do site — ou seja, ela
+   impede que um cliente comum mexa por engano, mas NÃO é uma
+   segurança forte (alguém com conhecimento técnico poderia
+   contornar). Não reutilize uma senha importante aqui.
+   Troque para uma senha simples só sua.
+------------------------------------------------------------- */
+const ADMIN_PASSWORD = "planetburguer2026"; // <-- TROQUE AQUI
+
+/* ------------------------------------------------------------
+   2) DADOS DA LOJA
+------------------------------------------------------------- */
+const STORE_INFO = {
+  name: "Planet Burguer",
+  slogan: "Uma viagem pelo universo dos sabores 🌌🍔",
+  instagram: "planetbuguer1", // sem @, só o nome de usuário
+  facebook: "Planet Burguer", // nome da página do Facebook
+  horario: "19h às 01h", // horário de funcionamento exibido no site
+  endereco: {
+    rua: "Rua General de Carvalho, 1123",
+    bairro: "Vista Alegre",
+    cidade: "Rio de Janeiro - RJ",
+  },
 };
 
-/* ==========================================================================
-   CONFIGURAÇÕES GERAIS DA LOJA E TAXA DE ENTREGA
-   ========================================================================== */
+/* ------------------------------------------------------------
+   2.0.1) HORÁRIO DE FUNCIONAMENTO (para o aviso de aberto/fechado)
+   ------------------------------------------------------------
+   Use o formato 24h (0 a 23). Se o horário passar da meia-noite
+   (como no nosso caso, 19h às 01h), pode colocar "fechamento"
+   menor que "abertura" sem problema — o site entende que é do
+   dia seguinte.
+------------------------------------------------------------- */
+const BUSINESS_HOURS = {
+  abertura: 19, // abre às 19h
+  fechamento: 1, // fecha à 01h (do dia seguinte)
+};
 
-const WHATSAPP_LOJA = "552199816-5047";
-const INSTAGRAM_LOJA = "@planetbuguer1";
-const HORARIO_FUNCIONAMENTO = "Terça a Domingo, das 18h às 23h30";
-const PEDIDO_MINIMO = 20.00;
-const TAXA_ENTREGA = 6.00;
-const AVISO_RODAPE = "Imagens meramente ilustrativas.";
+/* ------------------------------------------------------------
+   2.1) ENTREGA
+   - deliveryFeeMode: "consultar" mostra "(taxa de entrega a
+     consultar)" no lugar de um valor fixo, e NÃO soma nada
+     automaticamente ao total (o valor é combinado com o cliente
+     depois, pelo WhatsApp). Troque para "fixo" se um dia quiser
+     voltar a cobrar um valor fixo de entrega — nesse caso o
+     DELIVERY_FEE abaixo passa a ser usado normalmente.
+   - pedidoMinimo: valor mínimo de produtos exigido para fechar
+     o pedido (não conta a taxa de entrega)
+------------------------------------------------------------- */
+const DELIVERY_FEE_MODE = "consultar"; // "consultar" ou "fixo"
+const DELIVERY_FEE_TEXT = "a consultar";
+const DELIVERY_FEE = 6.0; // usado somente se DELIVERY_FEE_MODE for "fixo"
+const MINIMUM_ORDER = 20.0;
 
-/* ==========================================================================
-   LISTA DE PRODUTOS DO CARDÁPIO
-   ========================================================================== */
+/* ------------------------------------------------------------
+   2.2) "VIRAR COMBO" (acréscimo dentro do hambúrguer)
+   ------------------------------------------------------------
+   Em vez de combos como produtos separados, o cliente decide
+   direto na tela do hambúrguer se quer "virar combo" (acrescenta
+   batata + bebida por um valor a mais). Isso aparece como uma
+   opção (interruptor) dentro de cada hambúrguer que tiver
+   "permiteCombo: true" lá no cadastro do produto.
+------------------------------------------------------------- */
+const COMBO_ADDON = {
+  nome: "Batata frita M + refrigerante lata",
+  preco: 15.9,
+};
 
-const PRODUTOS = [
-  // --- HAMBÚRGUERES ---
+/* ------------------------------------------------------------
+   3) CATEGORIAS
+   Cada categoria tem um id (não mude o id depois de usar,
+   pois os produtos apontam para ele), um nome e um emoji/ícone.
+------------------------------------------------------------- */
+const CATEGORIES = [
+  { id: "hamburgueres", nome: "Hambúrgueres", icone: "🍔" },
+  { id: "combos", nome: "Combos", icone: "🍱" },
+  { id: "acompanhamentos", nome: "Acompanhamentos", icone: "🍟" },
+  { id: "bebidas", nome: "Bebidas", icone: "🥤" },
+  { id: "sobremesas", nome: "Sobremesas", icone: "🍨" },
+];
+
+/* ------------------------------------------------------------
+   4) ADICIONAIS DISPONÍVEIS
+   Lista única de adicionais que qualquer hambúrguer pode usar.
+   "preco" é o valor extra cobrado por unidade.
+------------------------------------------------------------- */
+const ADDONS = [
+  { id: "bacon", nome: "Bacon", preco: 6.0 },
+  { id: "cheddar", nome: "Cheddar extra", preco: 5.0 },
+  { id: "queijo", nome: "Queijo extra", preco: 4.0 },
+  { id: "hamburguer_extra", nome: "Hambúrguer extra (carne)", preco: 5.0 },
+  { id: "ovo", nome: "Ovo", preco: 1.57 },
+  { id: "cebola_caramelizada", nome: "Cebola caramelizada", preco: 4.0 },
+  { id: "molho_especial", nome: "Molho especial da casa", preco: 2.5 },
+  { id: "anel_cebola", nome: "Anéis de cebola empanados", preco: 6.5 },
+];
+
+/* ------------------------------------------------------------
+   5) INGREDIENTES REMOVÍVEIS (sem custo)
+   Ingredientes comuns que o cliente pode pedir para tirar,
+   sem cobrar nada a mais.
+------------------------------------------------------------- */
+const REMOVABLE_DEFAULT = ["Cebola", "Picles", "Molho", "Tomate", "Alface"];
+
+/* ------------------------------------------------------------
+   6) FORMAS DE PAGAMENTO
+------------------------------------------------------------- */
+const PAYMENT_METHODS = [
+  { id: "pix", nome: "Pix" },
+  { id: "dinheiro", nome: "Dinheiro" },
+  { id: "cartao", nome: "Cartão (na entrega/retirada)" },
+  { id: "outros", nome: "Outros" },
+];
+
+/* ------------------------------------------------------------
+   7) PRODUTOS
+   Para adicionar um produto novo, copie um bloco { ... }
+   inteiro, cole abaixo, e troque os valores.
+
+   Campos:
+   - id: identificador único, sem espaços (ex: "urano")
+   - categoria: precisa ser um dos ids da lista CATEGORIES acima
+   - nome: nome exibido
+   - subtitulo: frase curta (o "conceito" do planeta)
+   - descricao: descrição maior, some no modal do produto
+   - ingredientes: lista de ingredientes (texto)
+   - preco: preço base, em número (use ponto, não vírgula)
+   - imagem: caminho do arquivo de imagem
+   - destaque: true/false — aparece na seção "Destaques" da home
+   - disponivel: true/false — false esconde o produto do cardápio
+   - permiteAdicionais: true/false
+   - permiteCombo: true/false — mostra a opção "virar combo" (batata
+     + bebida por um valor a mais) na tela do produto
+   - removiveis: lista de ingredientes que podem ser retirados
+------------------------------------------------------------- */
+const PRODUCTS = [
   {
-    id: "hamburguer_mercurio",
+    id: "x_burguer",
     categoria: "hamburgueres",
-    nome: "Mercúrio",
-    legenda: "Artesanal da casa",
-    descricao: "Hambúrguer artesanal no pão australiano com queijo fatiado, molho cheddar, queijo cheddar extra e bacon crocante.",
-    ingredientes: "Pão australiano, hambúrguer artesanal, queijo fatiado, molho cheddar, queijo cheddar e bacon",
-    preco: 34.77,
-    imagem: "images/mercurio.jpg",
+    nome: "X-Burguer",
+    subtitulo: "O clássico, do jeito que tem que ser",
+    descricao:
+      "O lanche mais simples e certeiro da casa: pão macio, hambúrguer suculento, queijo derretido, alface, tomate e cebola.",
+    ingredientes: "Pão, hambúrguer 150g, queijo, alface, tomate e cebola roxa",
+    preco: 10.77,
+    imagem: "images/x_burguer.jpg",
+    destaque: false,
+    disponivel: true,
+    permiteAdicionais: true,
+    permiteCombo: true,
+    removiveis: REMOVABLE_DEFAULT,
+  },
+  {
+    id: "x_tudo",
+    categoria: "hamburgueres",
+    nome: "X-Tudo",
+    subtitulo: "Com tudo que você merece",
+    descricao:
+      "Completo do jeito que a gente gosta: queijo, bacon, calabresa, ovo, alface, tomate e cebola. Nosso mais pedido.",
+    ingredientes:
+      "Pão, hambúrguer 150g, queijo, bacon, calabresa, ovo, alface, tomate e cebola roxa",
+    preco: 17.0,
+    imagem: "images/x_tudo.jpg",
     destaque: true,
     disponivel: true,
     permiteAdicionais: true,
     permiteCombo: true,
-    removeis: ["Bacon", "Molho cheddar", "Queijo cheddar"]
+    removiveis: REMOVABLE_DEFAULT,
   },
   {
-    id: "hamburguer_terra",
+    id: "x_calabresa",
+    categoria: "hamburgueres",
+    nome: "X-Calabresa",
+    subtitulo: "Sabor marcante, no ponto certo",
+    descricao:
+      "Fatias generosas de calabresa grelhada com queijo derretido, alface, tomate e cebola. Para quem gosta de um sabor mais intenso.",
+    ingredientes:
+      "Pão, hambúrguer 150g, queijo, calabresa fatiada, alface, tomate e cebola roxa",
+    preco: 13.77,
+    imagem: "images/x_calabresa.jpg",
+    destaque: false,
+    disponivel: true,
+    permiteAdicionais: true,
+    permiteCombo: true,
+    removiveis: REMOVABLE_DEFAULT,
+  },
+  {
+    id: "x_bacon",
+    categoria: "hamburgueres",
+    nome: "X-Bacon",
+    subtitulo: "Bacon crocante em dose generosa",
+    descricao:
+      "Fatias fartas de bacon crocante com queijo derretido, alface, tomate e cebola. Simples e delicioso, do jeito que o bacon merece.",
+    ingredientes:
+      "Pão, hambúrguer 150g, queijo, bacon crocante, alface, tomate e cebola roxa",
+    preco: 14.07,
+    imagem: "images/x_bacon.jpg",
+    destaque: true,
+    disponivel: true,
+    permiteAdicionais: true,
+    permiteCombo: true,
+    removiveis: REMOVABLE_DEFAULT,
+  },
+  {
+    id: "terra",
     categoria: "hamburgueres",
     nome: "Terra",
-    legenda: "Clássico especial da casa",
-    descricao: "Hambúrguer artesanal suculento com ingredientes selecionados.",
-    ingredientes: "Pão, carne artesanal, queijo e molho especial",
+    subtitulo: "Artesanal da casa",
+    descricao:
+      "O artesanal da casa: carne artesanal suculenta, queijo processado sabor cheddar e molho especial, no pão com gergelim. Feito com carinho no ponto certo.",
+    ingredientes:
+      "Pão com gergelim, carne artesanal, queijo processado sabor cheddar, molho especial, cebola, picles e alface americana",
     preco: 34.77,
     imagem: "images/terra.jpg",
     destaque: true,
     disponivel: true,
     permiteAdicionais: true,
     permiteCombo: true,
-    removeis: ["Molho especial"]
-  },
-  {
-    id: "hamburguer_x_tudo",
-    categoria: "hamburgueres",
-    nome: "X-Tudo",
-    legenda: "Completo e bem recheado",
-    descricao: "O mais completo da casa com todos os acompanhamentos.",
-    ingredientes: "Pão, carne, queijo, presunto, bacon, ovo, salada e molho especial",
-    preco: 17.00,
-    imagem: "images/x-tudo.jpg",
-    destaque: true,
-    disponivel: true,
-    permiteAdicionais: true,
-    permiteCombo: true,
-    removeis: ["Bacon", "Ovo", "Salada"]
-  },
-  {
-    id: "hamburguer_x_bacon",
-    categoria: "hamburgueres",
-    nome: "X-Bacon",
-    legenda: "Muito bacon crocante",
-    descricao: "Hambúrguer delicioso com bastante bacon crocante e queijo derretido.",
-    ingredientes: "Pão, carne, queijo e bacon",
-    preco: 14.07,
-    imagem: "images/x-bacon.jpg",
-    destaque: false,
-    disponivel: true,
-    permiteAdicionais: true,
-    permiteCombo: true,
-    removeis: ["Bacon"]
-  },
-  {
-    id: "hamburguer_x_calabresa",
-    categoria: "hamburgueres",
-    nome: "X-Calabresa",
-    legenda: "Com fatias de calabresa",
-    descricao: "Hambúrguer acompanhado de fatias de calabresa acebolada e queijo.",
-    ingredientes: "Pão, carne, queijo e calabresa",
-    preco: 13.77,
-    imagem: "images/x-calabresa.jpg",
-    destaque: false,
-    disponivel: true,
-    permiteAdicionais: true,
-    permiteCombo: true,
-    removeis: ["Calabresa"]
-  },
-  {
-    id: "hamburguer_x_burguer",
-    categoria: "hamburgueres",
-    nome: "X-Burguer",
-    legenda: "O clássico simplificado",
-    descricao: "Hambúrguer tradicional com queijo derretido no pão macio.",
-    ingredientes: "Pão, carne e queijo",
-    preco: 10.77,
-    imagem: "images/x-burguer.jpg",
-    destaque: false,
-    disponivel: true,
-    permiteAdicionais: true,
-    permiteCombo: true,
-    removeis: []
+    removiveis: REMOVABLE_DEFAULT,
   },
 
-  // --- ACOMPANHAMENTOS ---
+  /* --- Combos --- */
   {
-    id: "batata_bacon_cheddar_m",
-    categoria: "acompanhamentos",
-    nome: "Batata Frita com Cheddar e Bacon M",
-    legenda: "Porção média",
-    descricao: "Batata frita coberta com molho cheddar cremoso e bacon crocante.",
-    ingredientes: "Batata frita, molho cheddar e bacon",
-    preco: 17.00,
-    imagem: "images/batata_frita.jpg",
+    id: "combo_kids",
+    categoria: "combos",
+    nome: "Combo Kids",
+    subtitulo: "Mini X-Burguer + batata + suco + brinde surpresa",
+    descricao:
+      "Combo pensado para os pequenos: um mini X-Burguer, batata frita, um suco Del Valle e um brinde surpresa da Planet Burguer.",
+    ingredientes: "1x Mini X-Burguer, 1x Batata Frita M, 1x Del Valle e 1x brinde surpresa",
+    preco: 29.77,
+    imagem: "images/combo_kids.jpg",
     destaque: true,
     disponivel: true,
-    permiteAdicionais: true,
+    permiteAdicionais: false,
     permiteCombo: false,
-    removeis: ["Bacon", "Cheddar"]
+    removiveis: [],
   },
+
+  /* --- Acompanhamentos --- */
   {
-    id: "batata_bacon_cheddar_g",
+    id: "batata_frita_m",
     categoria: "acompanhamentos",
-    nome: "Batata Frita com Cheddar e Bacon G",
-    legenda: "Porção grande",
-    descricao: "Porção generosa de batata frita com muito cheddar cremoso e bastante bacon.",
-    ingredientes: "Batata frita, molho cheddar e bacon",
-    preco: 27.00,
-    imagem: "images/batata_frita.jpg",
-    destaque: true,
-    disponivel: true,
-    permiteAdicionais: true,
-    permiteCombo: false,
-    removeis: ["Bacon", "Cheddar"]
-  },
-  {
-    id: "batata_p",
-    categoria: "acompanhamentos",
-    nome: "Batata Frita P",
-    legenda: "Porção individual",
-    descricao: "Porção pequena de batata frita crocante temperada apenas com sal.",
-    ingredientes: "Batata frita e sal",
-    preco: 7.00,
+    nome: "Batata Frita Bacon e Cheddar M",
+    subtitulo: "Porção média com cheddar e bacon",
+    descricao:
+      "Porção média de batatas fritas crocantes cobertas com cheddar cremoso e bacon crocante.",
+    ingredientes: "Batata, cheddar cremoso e bacon crocante",
+    preco: 17.0,
     imagem: "images/batata_frita.jpg",
     destaque: false,
     disponivel: true,
     permiteAdicionais: false,
     permiteCombo: false,
-    removeis: ["Sal"]
+    removiveis: [],
   },
   {
-    id: "aneis_cebola",
+    id: "batata_frita_g",
     categoria: "acompanhamentos",
-    nome: "Anel de Cebola (10 unidades)",
-    legenda: "Onion Rings crocantes",
-    descricao: "Porção com 10 anéis de cebola empanados e fritos até ficarem dourados.",
-    ingredientes: "Cebola empanada",
+    nome: "Batata Frita Bacon e Cheddar G",
+    subtitulo: "Porção grande com cheddar e bacon — para compartilhar",
+    descricao:
+      "Porção grande de batatas fritas crocantes cobertas com cheddar cremoso e bacon crocante, ideal para compartilhar.",
+    ingredientes: "Batata, cheddar cremoso e bacon crocante",
+    preco: 27.0,
+    imagem: "images/batata_frita.jpg",
+    destaque: false,
+    disponivel: true,
+    permiteAdicionais: false,
+    permiteCombo: false,
+    removiveis: [],
+  },
+  {
+    id: "porcao_aneis_cebola",
+    categoria: "acompanhamentos",
+    nome: "Anel de Cebola",
+    subtitulo: "Porção com 10 unidades",
+    descricao: "Anéis de cebola empanados e crocantes, porção com 10 unidades.",
+    ingredientes: "Cebola, empanado crocante",
     preco: 15.77,
     imagem: "images/aneis_cebola.jpg",
-    destaque: true,
+    destaque: false,
     disponivel: true,
     permiteAdicionais: false,
     permiteCombo: false,
-    removeis: []
+    removiveis: [],
   },
 
-  // --- BEBIDAS ---
+  /* --- Bebidas --- */
   {
     id: "coca_cola",
     categoria: "bebidas",
     nome: "Coca-Cola",
-    legenda: "Lata 350ml",
-    descricao: "Refrigerante Coca-Cola bem gelado.",
-    ingredientes: "Coca-Cola",
-    preco: 7.00,
+    subtitulo: "Lata 350ml, gelada",
+    descricao: "Coca-Cola gelada, lata 350ml.",
+    ingredientes: "",
+    preco: 7.0,
     imagem: "images/coca_cola.jpg",
     destaque: false,
     disponivel: true,
     permiteAdicionais: false,
     permiteCombo: false,
-    removeis: []
+    removiveis: [],
   },
   {
-    id: "coquinha_200ml",
+    id: "coca_cola_200",
     categoria: "bebidas",
-    nome: "Coquinha 200ml",
-    legenda: "Garrafinha 200ml",
-    descricao: "Coca-Cola caçulinha 200ml bem gelada.",
-    ingredientes: "Coca-Cola",
-    preco: 3.50,
+    nome: "Coca-Cola 200ml",
+    subtitulo: "Garrafa 200ml, gelada",
+    descricao: "Coca-Cola gelada, garrafa 200ml.",
+    ingredientes: "",
+    preco: 3.5, // <-- confirme esse valor, não foi informado o preço exato
     imagem: "images/coca_cola_200.jpg",
     destaque: false,
     disponivel: true,
     permiteAdicionais: false,
     permiteCombo: false,
-    removeis: []
+    removiveis: [],
   },
   {
-    id: "guarana_antarctica",
+    id: "coca_cola_zero",
     categoria: "bebidas",
-    nome: "Guaraná Antártica",
-    legenda: "Lata 350ml",
-    descricao: "Refrigerante Guaraná Antártica bem gelado.",
-    ingredientes: "Guaraná Antártica",
-    preco: 7.00,
-    imagem: "images/guarana.jpg",
+    nome: "Coca-Cola Zero Açúcar",
+    subtitulo: "Lata 350ml, gelada",
+    descricao: "Coca-Cola Zero Açúcar gelada, lata 350ml.",
+    ingredientes: "",
+    preco: 7.5,
+    imagem: "images/coca_cola_zero.jpg",
     destaque: false,
     disponivel: true,
     permiteAdicionais: false,
     permiteCombo: false,
-    removeis: []
+    removiveis: [],
   },
   {
     id: "guaravita",
     categoria: "bebidas",
     nome: "Guaravita",
-    legenda: "Copo 290ml",
-    descricao: "Bebida de guaraná tradicional bem gelada.",
-    ingredientes: "Guaravita",
-    preco: 3.00,
+    subtitulo: "290ml, gelada",
+    descricao: "Bebida de guaraná adoçada, 290ml, bem gelada.",
+    ingredientes: "",
+    preco: 3.0,
     imagem: "images/guaravita.jpg",
     destaque: false,
     disponivel: true,
     permiteAdicionais: false,
     permiteCombo: false,
-    removeis: []
+    removiveis: [],
   },
   {
-    id: "del_valle",
+    id: "del_valle_uva",
     categoria: "bebidas",
-    nome: "Del Valle",
-    legenda: "Lata / Garrafa",
-    descricao: "Suco Del Valle saboroso e gelado.",
-    ingredientes: "Suco Del Valle",
-    preco: 8.00,
+    nome: "Del Valle Uva",
+    subtitulo: "290ml, gelado",
+    descricao: "Suco de uva Del Valle, lata 290ml, bem gelado.",
+    ingredientes: "",
+    preco: 8.0,
     imagem: "images/del_valle_uva.jpg",
     destaque: false,
     disponivel: true,
     permiteAdicionais: false,
     permiteCombo: false,
-    removeis: []
+    removiveis: [],
   },
 
-  // --- SOBREMESAS ---
+  /* --- Sobremesas --- */
   {
-    id: "morango_ao_leite_300ml",
+    id: "morango_ao_leite_300",
     categoria: "sobremesas",
     nome: "Morango ao Leite 300ml",
-    legenda: "Copo 300ml",
-    descricao: "Deliciosa sobremesa de morango ao leite geladinha.",
-    ingredientes: "Morango e leite condensado/creme",
+    subtitulo: "Cremoso, geladinho e bem docinho",
+    descricao: "Bebida cremosa de morango com leite, 300ml, servida bem gelada.",
+    ingredientes: "Morango, leite e açúcar",
     preco: 12.77,
-    imagem: "images/morango_leite.jpg",
+    imagem: "images/morango_ao_leite.jpg",
     destaque: false,
     disponivel: true,
     permiteAdicionais: false,
     permiteCombo: false,
-    removeis: []
+    removiveis: [],
   },
   {
-    id: "morango_ao_leite_500ml",
+    id: "morango_ao_leite_500",
     categoria: "sobremesas",
     nome: "Morango ao Leite 500ml",
-    legenda: "Copo 500ml",
-    descricao: "Porção grande de morango ao leite geladinha.",
-    ingredientes: "Morango e leite condensado/creme",
+    subtitulo: "Cremoso, geladinho e bem docinho — porção maior",
+    descricao: "Bebida cremosa de morango com leite, 500ml, servida bem gelada.",
+    ingredientes: "Morango, leite e açúcar",
     preco: 15.97,
-    imagem: "images/morango_leite.jpg",
+    imagem: "images/morango_ao_leite.jpg",
     destaque: false,
     disponivel: true,
     permiteAdicionais: false,
     permiteCombo: false,
-    removeis: []
-  }
+    removiveis: [],
+  },
 ];
